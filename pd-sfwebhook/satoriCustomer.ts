@@ -5,6 +5,7 @@ import * as url from 'url';
 import { ConfigFile } from './configFile';
 import { SalesforceAccessInfo } from './salesforceAccessInfo';
 import { SalesforcePostResult } from './salesforcePostResult';
+import { SalesforcePostData } from './salesforcePostData';
 
 export class SatoriCustomer {
     constructor(body: any) {
@@ -73,6 +74,31 @@ export class SatoriCustomer {
         if (!salesforceAccessInfo.result) {
             salesforcePostResult.result = false;
             salesforcePostResult.message = salesforceAccessInfo.message;
+        }
+        else {
+            // SalesforceのApexクラスを呼び出す
+            const url: string = salesforceAccessInfo.instanceUrl + '/services/apexrest/' + this.apexClass + '/';
+            const salesforcePostData: SalesforcePostData = new SalesforcePostData();
+            salesforcePostData.customer = JSON.stringify(this.customer);
+
+            const config: any = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + salesforceAccessInfo.accessToken,
+                },
+            };
+
+            let res;
+            try {
+                res = await axios.post(url, salesforcePostData, config);
+            }
+            catch(e) {
+                salesforcePostResult.result = false;
+                salesforcePostResult.message = e.message;
+            }
+            if (res && res.data) {
+                salesforcePostResult.apexResult = JSON.parse(res.data);
+            }
         }
         
         return salesforcePostResult;
