@@ -94,7 +94,7 @@ export class SatoriCustomer {
             }
             catch(e) {
                 salesforcePostResult.result = false;
-                salesforcePostResult.message = e.message;
+                salesforcePostResult.message = 'Post data to salesforce failed: ' + e.message;
             }
             if (res && res.data) {
                 salesforcePostResult.apexResult = JSON.parse(res.data);
@@ -141,7 +141,7 @@ export class SatoriCustomer {
         }
         catch(e) {
             salesforceAccessInfo.result = false;
-            salesforceAccessInfo.message = e.message;
+            salesforceAccessInfo.message = 'Can not get access token from salesforce: ' + e.message;
             return salesforceAccessInfo;
         }
         
