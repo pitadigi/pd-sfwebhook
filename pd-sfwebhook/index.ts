@@ -1,8 +1,8 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
 import * as dotenv from 'dotenv';
 
-import { SatoriCustomer } from './satoriCustomer';
-import { SalesforcePostResult } from './salesforcePostResult';
+import { SatoriCustomer } from './satori-customer';
+import { PostResult } from './post-result';
 
 /**
  * SATORIのWebhookからカスタマー情報をSalesforceに登録する
@@ -57,19 +57,19 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
         return;
     }
 
-    // SalesforceのApexクラスを呼び出す
-    const salesforcePostResult = await satoriCustomer.postToSalesforce();
+    // Storageキューに保存する
+    const postResult:PostResult = await satoriCustomer.postToStorageQueue();
 
-    if (!salesforcePostResult.result) {
+    if (!postResult.result) {
         context.res = {
             status: 400,
-            body: salesforcePostResult.message,
+            body: postResult.message,
         };
     }
     else {
         context.res = {
             status: 200,
-            body: salesforcePostResult.apexResult,
+            body: postResult,
         };
     }
 };

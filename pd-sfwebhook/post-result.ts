@@ -1,4 +1,4 @@
-export class SalesforcePostResult {
+export class PostResult {
     /**
      * 結果
      * true: 正常 / false: エラー
