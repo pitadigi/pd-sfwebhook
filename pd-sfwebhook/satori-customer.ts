@@ -53,9 +53,10 @@ export class SatoriCustomer {
         const postResult: PostResult = new PostResult();
 
         const queueClient: QueueClient = new QueueClient(process.env.AZURE_STORAGE_CONNECTION_STRING, process.env.AZURE_STORAGE_QUEUE_NAME);
+        const message = Buffer.from(JSON.stringify(this.bodyData)).toString('base64');
 
         try {
-            await queueClient.sendMessage(JSON.stringify(this.bodyData));
+            await queueClient.sendMessage(message);
         }
         catch(e) {
             postResult.result = false;
