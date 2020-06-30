@@ -1,0 +1,12 @@
+{
+  "bindings": [
+    {
+      "name": "pdSfWebhookQueue",
+      "type": "queueTrigger",
+      "direction": "in",
+      "queueName": "pd-sfwebhook-queue",
+      "connection": "AzureWebJobsStorage"
+    }
+  ],
+  "scriptFile": "../dist/pd-sfpost/index.js"
+}
